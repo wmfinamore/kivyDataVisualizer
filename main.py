@@ -7,6 +7,7 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from plyer import filechooser
 from kivy.clock import Clock
+import pandas as pd
 
 Window.size = (1000, 600)
 
@@ -21,13 +22,22 @@ class Interface(BoxLayout):
         files = filechooser.open_file(title="Choose excel files", filters=[("*.xlsx")], multiple=True)
         for file in files:
             file_name = file.split("\\")[-1]
-            box = BoxLayout(size_hint_y=None, height=75, padding=[30, 0, 0, 0])
+            box = BoxLayout(size_hint_y=None, height=70, padding=[30, 0, 0, 0])
             checkbox = CheckBox(size_hint_x=.25, background_checkbox_normal="checkbox_nor.png",
                                 background_checkbox_down="checkbox_tic.png")
             label = Label(text=f"[color=#3f51b5]{file_name}[/color]", markup=True, text_size=(150, 75))
             box.add_widget(checkbox)
             box.add_widget(label)
             self.ids.file_placeholder.add_widget(box)
+        columns = pd.read_excel(files[0]).columns.values.tolist()
+        for column in columns:
+            box = BoxLayout(size_hint_y=None, height=30, padding=[30, 0, 0, 0])
+            checkbox = CheckBox(size_hint_x=.25, background_checkbox_normal="checkbox_nor.png",
+                                background_checkbox_down="checkbox_tic.png")
+            label = Label(text=f"[color=#3f51b5]{column}[/color]", markup=True, text_size=(150, 30))
+            box.add_widget(checkbox)
+            box.add_widget(label)
+            self.ids.property_placeholder.add_widget(box)
         self.ids.upload_btn.source = "Drag.png"
 
     def upload_menu(self):

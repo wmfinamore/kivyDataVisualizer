@@ -9,6 +9,8 @@ verify_ssl = true
 kivy = "*"
 matplotlib = "*"
 plyer = "*"
+pandas = "*"
+openpyxl = "*"
 
 [requires]
 python_version = "3.9"

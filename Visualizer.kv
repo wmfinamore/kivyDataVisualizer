@@ -66,12 +66,14 @@ Interface:
                                 size_hint: (1, .85)
                                 ScrollView:
                                     GridLayout:
-                                        id: file_placeholder
+                                        id: property_placeholder
                                         size_hint_y: None
                                         height: self.minimum_height
                                         cols: 1
                     BoxLayout:
                         size_hint: (.75, 1)
+                        orientation: "vertical"
+
                         BoxLayout:
                             id: graph_placeholder
                         BoxLayout:

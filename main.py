@@ -2,7 +2,9 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.checkbox import CheckBox
 from kivy.uix.image import Image
+from kivy.uix.label import Label
 from plyer import filechooser
 from kivy.clock import Clock
 
@@ -17,7 +19,15 @@ class Interface(BoxLayout):
 
     def uploader(self, dt):
         files = filechooser.open_file(title="Choose excel files", filters=[("*.xlsx")], multiple=True)
-        print(files)
+        for file in files:
+            file_name = file.split("\\")[-1]
+            box = BoxLayout(size_hint_y=None, height=75, padding=[30, 0, 0, 0])
+            checkbox = CheckBox(size_hint_x=.25, background_checkbox_normal="checkbox_nor.png",
+                                background_checkbox_down="checkbox_tic.png")
+            label = Label(text=f"[color=#3f51b5]{file_name}[/color]", markup=True, text_size=(150, 75))
+            box.add_widget(checkbox)
+            box.add_widget(label)
+            self.ids.file_placeholder.add_widget(box)
         self.ids.upload_btn.source = "Drag.png"
 
     def upload_menu(self):

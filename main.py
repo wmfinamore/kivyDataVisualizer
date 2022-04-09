@@ -24,6 +24,9 @@ class Interface(BoxLayout):
         self.ids.upload_btn.source = "Drop.png"
         Clock.schedule_once(self.uploader)
 
+    def switching(self):
+        self.ids.sm.current = "visualizer_window"
+
 
 class VisualizerApp(App):
     pass

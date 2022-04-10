@@ -8,6 +8,8 @@ from kivy.uix.label import Label
 from plyer import filechooser
 from kivy.clock import Clock
 import pandas as pd
+from matplotlib import pyplot as plt
+import math
 
 Window.size = (1000, 600)
 
@@ -27,9 +29,11 @@ class Interface(BoxLayout):
     def uploader(self, dt):
         self.obj_dict = dict()
         self.column_dict =dict()
-        files = filechooser.open_file(title="Choose excel files", filters=[("*.xlsx")], multiple=True)
-        for file in files:
+        self.files_address = dict()
+        self.files = filechooser.open_file(title="Choose excel files", filters=[("*.xlsx")], multiple=True)
+        for file in self.files:
             file_name = file.split("\\")[-1]
+            self.files_address[file_name] = file
             box = BoxLayout(size_hint_y=None, height=70, padding=[30, 0, 0, 0])
             checkbox = CheckBox(size_hint_x=.25, background_checkbox_normal="checkbox_nor.png",
                                 background_checkbox_down="checkbox_tic.png")
@@ -39,8 +43,8 @@ class Interface(BoxLayout):
             box.add_widget(label)
             self.ids.file_placeholder.add_widget(box)
             self.obj_dict[checkbox] = file_name
-        print(self.obj_dict)
-        columns = pd.read_excel(files[0]).columns.values.tolist()
+        # print(self.obj_dict)
+        columns = pd.read_excel(self.files[0]).columns.values.tolist()
         for column in columns:
             box = BoxLayout(size_hint_y=None, height=30, padding=[30, 0, 0, 0])
             checkbox = CheckBox(size_hint_x=.25, background_checkbox_normal="checkbox_nor.png",
@@ -50,8 +54,23 @@ class Interface(BoxLayout):
             box.add_widget(label)
             self.ids.property_placeholder.add_widget(box)
             self.column_dict[checkbox] = column
-        print(self.column_dict)
+        # print(self.column_dict)
         self.ids.upload_btn.source = "Drag.png"
+
+    def update(self):
+        # Total number of charts
+        files_len = len(self.files)
+        row_col = math.ceil(files_len/2)
+        fig, axis = plt.subplots(row_col, row_col)
+        # keys
+        files_checkbox = self.obj_dict.keys()
+        for file_checkbox in files_checkbox:
+            if file_checkbox.active:
+                file_name = self.obj_dict[file_checkbox]
+                file_address = self.files_address[file_name]
+                content = pd.read_excel(file_address)
+                print(content)
+
 
     def upload_menu(self):
         self.ids.upload_btn.source = "Drop.png"
